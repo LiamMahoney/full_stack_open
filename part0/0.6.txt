@@ -1,0 +1,25 @@
+note over browser:
+user enters data into form
+input and clicks save button
+end note
+
+note over browser:
+button on submit event handler
+is executed which:
+1. creates the bject that describes
+the note and stores it in the global
+variable
+2. calls the function `redrawNotes()`
+which renders all of the notes
+3. sends the note data to the server
+to be stored via AJAX
+end note
+
+browser-->server HTTP POST [{ content: "note value", date: "2021-05-04T02:08:08.866Z"}]
+server->browser: 201
+
+note over browser:
+AJAX resposne callback is executed
+which logs the response text to the
+console
+end note
