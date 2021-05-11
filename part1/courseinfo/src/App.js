@@ -16,6 +16,9 @@ const App = () => {
       <p>good {good}</p>
       <p>neutral {neutral}</p>
       <p>bad {bad}</p>
+      <p>all {good + neutral + bad}</p>
+      <p>average {good > 0 || neutral > 0 || bad > 0 ? Math.abs((good + (bad * -1)) / (good + neutral + bad)) : 'N/A'}</p>
+      <p>positive {good > 0 || neutral > 0 || bad > 0 ? (good / (good + neutral + bad)) * 100 : 'N/A'} %</p>
     </div>
   )
 }
