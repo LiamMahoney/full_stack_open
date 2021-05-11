@@ -5,12 +5,16 @@ const Statistics = (props) => {
     return (
       <>
         <h1>statistics</h1>
-        <Statistic title="good" data={props.good}/>
-        <Statistic title="neutral" data={props.neutral}/>
-        <Statistic title="bad" data={props.bad}/>
-        <Statistic title="all" data={props.good + props.neutral + props.bad}/>
-        <Statistic title="average" data={Math.abs((props.good + (props.bad * -1)) / (props.good + props.neutral + props.bad))}/>
-        <Statistic title="positive" data={`${(props.good / (props.good + props.neutral + props.bad)) * 100} %`}/>
+        <table>
+          <tbody>
+            <Statistic title="good" data={props.good}/>
+            <Statistic title="neutral" data={props.neutral}/>
+            <Statistic title="bad" data={props.bad}/>
+            <Statistic title="all" data={props.good + props.neutral + props.bad}/>
+            <Statistic title="average" data={Math.abs((props.good + (props.bad * -1)) / (props.good + props.neutral + props.bad))}/>
+            <Statistic title="positive" data={`${(props.good / (props.good + props.neutral + props.bad)) * 100} %`}/>
+          </tbody>
+        </table>
       </>
     )
   } else {
@@ -31,7 +35,10 @@ const Button = (props) => {
 
 const Statistic = (props) => {
   return (
-    <p>{props.title} {props.data}</p>
+    <tr>
+      <td>{props.title}</td>
+      <td>{props.data}</td>
+    </tr>
   )
 }
 
