@@ -11,10 +11,19 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array.from(Array(anecdotes.length), () => 0))
+
+  const addVote = () => {
+    const voteCopy = [...votes];
+    voteCopy[selected] += 1;
+    setVotes(voteCopy);
+  }
 
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <p>has {votes[selected]} votes</p>
+      <button onClick={addVote}>vote</button>
       <button onClick={() => selected < anecdotes.length - 1 ? setSelected(selected + 1) : setSelected(0)}>next anecdote</button>
     </div>
   )
