@@ -5,12 +5,12 @@ const Statistics = (props) => {
     return (
       <>
         <h1>statistics</h1>
-        <p>good {props.good}</p>
-        <p>neutral {props.neutral}</p>
-        <p>bad {props.bad}</p>
-        <p>all {props.good + props.neutral + props.bad}</p>
-        <p>average {props.good > 0 || props.neutral > 0 || props.bad > 0 ? Math.abs((props.good + (props.bad * -1)) / (props.good + props.neutral + props.bad)) : 0}</p>
-        <p>positive {props.good > 0 || props.neutral > 0 || props.bad > 0 ? (props.good / (props.good + props.neutral + props.bad)) * 100 : 0} %</p>
+        <Statistic title="good" data={props.good}/>
+        <Statistic title="neutral" data={props.neutral}/>
+        <Statistic title="bad" data={props.bad}/>
+        <Statistic title="all" data={props.good + props.neutral + props.bad}/>
+        <Statistic title="average" data={Math.abs((props.good + (props.bad * -1)) / (props.good + props.neutral + props.bad))}/>
+        <Statistic title="positive" data={`${(props.good / (props.good + props.neutral + props.bad)) * 100} %`}/>
       </>
     )
   } else {
@@ -21,7 +21,18 @@ const Statistics = (props) => {
       </>
     )
   }
+}
 
+const Button = (props) => {
+  return (
+    <button onClick={props.handleClick}>{props.text}</button>
+  )
+}
+
+const Statistic = (props) => {
+  return (
+    <p>{props.title} {props.data}</p>
+  )
 }
 
 const App = () => {
@@ -33,9 +44,9 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button onClick={() => setGood(good + 1)}>good</button>
-      <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-      <button onClick={() => setBad(bad + 1)}>bad</button>
+      <Button handleClick={() => setGood(good + 1)} text="good"/>
+      <Button handleClick={() => setNeutral(neutral + 1)} text="neutral"/>
+      <Button handleClick={() => setBad(bad + 1)} text="bad"/>
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
