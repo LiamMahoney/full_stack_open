@@ -7,8 +7,11 @@ const Header = ({ course }) => {
 }
 
 const Total = ({ course }) => {
-  let sum = 0;
-  course.parts.forEach(item => sum += item.exercises)
+
+  const sum = course.parts.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue.exercises
+  }, 0)
+
   return(
     <p><b>Total of {sum} exercises</b></p>
   ) 
