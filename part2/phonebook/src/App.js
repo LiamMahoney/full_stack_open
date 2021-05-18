@@ -12,7 +12,11 @@ const App = () => {
 
   const handleNameSubmit = (event) => {
     event.preventDefault();
-    setPersons([{name: newName}, ...persons]);
+    if (persons.find(person => person.name === newName)) {
+      alert(`${newName} already added to the phonebook`);
+    } else {
+      setPersons([{name: newName}, ...persons]);
+    }
     setNewName('');
   }
 
