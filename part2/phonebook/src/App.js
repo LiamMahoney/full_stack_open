@@ -27,7 +27,12 @@ const App = () => {
     if (persons.find(person => person.name === newName)) {
       alert(`${newName} already added to the phonebook`);
     } else {
-      setPersons([{name: newName, number: newNumber}, ...persons]);
+      axios.post('http://localhost:3001/persons', {name: newName, number: newNumber}).then((response) => {
+        setPersons([{name: newName, number: newNumber}, ...persons]);
+      }).catch((error) => {
+        alert(`Failed to add ${newName} to the phonebook`);
+      })
+
     }
     setNewName('');
     setNewNumber('');
