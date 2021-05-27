@@ -28,7 +28,7 @@ const App = () => {
       alert(`${newName} already added to the phonebook`);
     } else {
       personsService.create({name: newName, number: newNumber}).then((response) => {
-        setPersons([{name: newName, number: newNumber}, ...persons]);
+        setPersons([response, ...persons]);
       }).catch((error) => {
         alert(`Failed to add ${newName} to the phonebook`);
       })
@@ -36,6 +36,19 @@ const App = () => {
     }
     setNewName('');
     setNewNumber('');
+  }
+
+  const handleDelete = (person) => {
+    const result = window.confirm(`Delete ${person.name}?`);
+
+    if (result) {
+      personsService.remove(person.id).then((response) => {
+        setPersons(persons.filter(p => p.id !== person.id));
+      }).catch((error) => {
+        alert('experienced an error while trying to remove user');
+      })
+
+    }
   }
 
   useEffect(() => {
@@ -63,7 +76,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons contacts={filteredList} />
+      <Persons contacts={filteredList} handleDelete={handleDelete}/>
     </div>
   )
 }

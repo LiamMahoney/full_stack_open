@@ -6,7 +6,6 @@ const getAll = () => {
     const request = axios.get(baseURL);
 
     return request.then((response) => {
-        console.log('getall response', response)
         return response.data;
     })
 }
@@ -19,4 +18,12 @@ const create = (newObject) => {
     })
 }
 
-export default { getAll, create }
+const remove = (objectId) => {
+    const request = axios.delete(`${baseURL}/${objectId}`);
+
+    return request.then((response) => {
+        return response.data;
+    })
+}
+
+export default { getAll, create, remove }
