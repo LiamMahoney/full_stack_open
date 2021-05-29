@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
 import personsService from './services/persons'
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('');
   const [ newNumber, setNewNumber ] = useState('');
   const [ filter, setFilter ] = useState('');
+  const [ successMessage, setSuccessMessage ] = useState(null);
   
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -32,7 +34,11 @@ const App = () => {
         const updatedPerson = {...existingPerson, number: newNumber}
 
         personsService.update(updatedPerson).then((response) => {
-          setPersons(persons.map((i) => i.id === updatedPerson.id ? response : i))
+          setPersons(persons.map((i) => i.id === updatedPerson.id ? response : i));          
+          setSuccessMessage(`Updated ${response.name}`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
         }).catch((error) => {
           alert('experienced an error trying to update the persons phone number');
         })
@@ -41,6 +47,10 @@ const App = () => {
     } else {
       personsService.create({name: newName, number: newNumber}).then((response) => {
         setPersons([response, ...persons]);
+        setSuccessMessage(`Created ${newName}`)
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
       }).catch((error) => {
         alert(`Failed to add ${newName} to the phonebook`);
       })
@@ -56,6 +66,10 @@ const App = () => {
     if (result) {
       personsService.remove(person.id).then((response) => {
         setPersons(persons.filter(p => p.id !== person.id));
+        setSuccessMessage(`Deleted ${newName}`)
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
       }).catch((error) => {
         alert('experienced an error while trying to remove user');
       })
@@ -80,6 +94,7 @@ const App = () => {
         handleFilterChange={handleFilterChange}
       />
       <h3>add a new</h3>
+      <Notification message={successMessage} type='success' /> )
       <PersonForm
         handleNameSubmit={handleNameSubmit}
         newName={newName}
