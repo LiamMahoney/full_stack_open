@@ -11,6 +11,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('');
   const [ filter, setFilter ] = useState('');
   const [ successMessage, setSuccessMessage ] = useState(null);
+  const [ errorMessage, setErrorMessage ] = useState(null);
   
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -40,7 +41,10 @@ const App = () => {
             setSuccessMessage(null);
           }, 5000);
         }).catch((error) => {
-          alert('experienced an error trying to update the persons phone number');
+          setErrorMessage(`Experienced an error trying to update ${existingPerson.name}`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
         })
       }
 
@@ -52,7 +56,10 @@ const App = () => {
           setSuccessMessage(null);
         }, 5000);
       }).catch((error) => {
-        alert(`Failed to add ${newName} to the phonebook`);
+        setErrorMessage(`Exerienced an error trying to create ${newName}`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
       })
 
     }
@@ -71,7 +78,10 @@ const App = () => {
           setSuccessMessage(null);
         }, 5000);
       }).catch((error) => {
-        alert('experienced an error while trying to remove user');
+        setErrorMessage(`Exerpeinced an error trying to delete the user`);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 5000);
       })
 
     }
@@ -94,7 +104,8 @@ const App = () => {
         handleFilterChange={handleFilterChange}
       />
       <h3>add a new</h3>
-      <Notification message={successMessage} type='success' /> )
+      <Notification message={successMessage} type='success' /> 
+      <Notification message={errorMessage} type='error' />
       <PersonForm
         handleNameSubmit={handleNameSubmit}
         newName={newName}
