@@ -1,7 +1,7 @@
-POST https://stormy-lowlands-94432.herokuapp.com/api/persons
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "lili",
-    "number": "011"
+    "name": "Grover Eiden",
+    "number": "000-000-0001"
 }
