@@ -1,0 +1,7 @@
+PUT http://localhost:3001/api/notes/60b9922377c98c103f4dd6ef
+Content-Type: application/json
+
+{
+    "content": "Grover is chewing a bull pizzle",
+    "important": false
+}
