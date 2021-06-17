@@ -17,9 +17,11 @@ app.use(cors());
 app.use(express.static('build'))
 
 app.get('/info', (request, response) => {
-    const info = `Phonebook has info for ${persons.length} people\n\n${new Date()}`;
+    Person.find({}).then((persons) => {
+        const info = `Phonebook has info for ${persons.length} people\n\n${new Date()}`;
 
-    response.end(info);
+        response.end(info);
+    })
 });
 
 app.get('/api/persons', (request, response, next) => {
