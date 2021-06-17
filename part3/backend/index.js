@@ -1,7 +1,7 @@
-require('dotenv').config()
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const Note = require('./models/note')
+const Note = require('./models/note');
 
 const app = express();
 app.use(express.json());
@@ -11,7 +11,7 @@ function requestLogger(request, response, next) {
     console.log('Path:', request.path);
     console.log('Body:', request.body);
     console.log('---');
-    next()
+    next();
 }
 
 app.use(requestLogger);
@@ -44,12 +44,12 @@ app.post('/api/notes/', (request, response, next) => {
     });
 
     note.save().then((savedNote) => {
-        return savedNote.toJSON()
+        return savedNote.toJSON();
     }).then((savedAndFormattedNote) => {
         response.json(savedAndFormattedNote);
     }).catch((error) => {
         next(error);
-    })
+    });
 });
 
 app.get('/api/notes/:id', (request, response, next) => {
@@ -61,16 +61,16 @@ app.get('/api/notes/:id', (request, response, next) => {
         }
     }).catch((error) => {
         next(error);
-    })
+    });
 });
 
 app.delete('/api/notes/:id', (request, response, next) => {
-    Note.findByIdAndRemove(request.params.id).then((result) => {
+    Note.findByIdAndRemove(request.params.id).then(() => {
         response.status(204).end();
     }).catch((error) => {
         next(error);
-    })
-})
+    });
+});
 
 app.put('/api/notes/:id', (request, response, next) => {
     const body = request.body;
@@ -78,17 +78,17 @@ app.put('/api/notes/:id', (request, response, next) => {
     const note = {
         content: body.content,
         important: body.important
-    }
+    };
 
-    Note.findByIdAndUpdate(request.params.id, note, {new: true}).then((updatedNote) => {
+    Note.findByIdAndUpdate(request.params.id, note, { new: true }).then((updatedNote) => {
         response.json(updatedNote);
     }).catch((error) => {
         next(error);
-    })
-})
+    });
+});
 
 function unknownEndpoint (request, response) {
-    response.status(404).send({error: 'unkown endpoint'});
+    response.status(404).send({ error: 'unkown endpoint' });
 }
 
 app.use(unknownEndpoint);
@@ -97,9 +97,9 @@ function errorHandler(error, request, response, next) {
     console.error(error.message);
 
     if (error.name === 'CastError') {
-        return response.status(400).send({error: 'malformed id'});
+        return response.status(400).send({ error: 'malformed id' });
     } else if (error.name === 'ValidationError') {
-        return response.status(400).json({error: error.message});
+        return response.status(400).json({ error: error.message });
     }
 
     next(error);
@@ -110,4 +110,4 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-})
+});
