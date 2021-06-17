@@ -8,7 +8,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 });
 
 const personSchema = new mongoose.Schema({
-    name: {type: String, unique: true, required: true},
+    name: {type: String, unique: true, required: true, minLength: 8},
     number: {type: String, required: true}
 });
 

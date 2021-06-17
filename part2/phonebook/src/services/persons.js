@@ -15,6 +15,8 @@ const create = (newObject) => {
 
     return request.then((response) => {
         return response.data;
+    }).catch((error) => {
+        throw error;
     })
 }
 

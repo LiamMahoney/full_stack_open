@@ -56,7 +56,7 @@ const App = () => {
           setSuccessMessage(null);
         }, 5000);
       }).catch((error) => {
-        setErrorMessage(`Exerienced an error trying to create ${newName}`);
+        setErrorMessage(error.response.data);
         setTimeout(() => {
           setErrorMessage(null);
         }, 5000);
