@@ -8,7 +8,23 @@ function totalLikes(blogs) {
     }, 0);
 }
 
+function favoriteBlog(blogs) {
+    let favoriteBlog = undefined;
+
+    blogs.forEach((blog) => {
+        if (favoriteBlog === undefined) {
+            favoriteBlog = blog;
+        }
+        else if (blog.likes > favoriteBlog.likes) {
+            favoriteBlog = blog;
+        }
+    });
+
+    return favoriteBlog;
+}
+
 module.exports = {
     dummy,
-    totalLikes
+    totalLikes,
+    favoriteBlog
 };
