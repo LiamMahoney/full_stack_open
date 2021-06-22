@@ -57,9 +57,41 @@ function mostBlogs(blogs) {
     return maxAuthor;
 }
 
+function mostLikes(blogs) {
+    let authors = blogs.reduce((accumulator, currentValue) => {
+        let currAuthor = accumulator.find((author) => {
+            return author.author === currentValue.author;
+        });
+
+        if (currAuthor) {
+            currAuthor.likes += currentValue.likes
+        } else {
+            accumulator.push({
+                author: currentValue.author,
+                likes: currentValue.likes
+            });
+        }
+
+        return accumulator;
+    }, []);
+
+    let maxAuthor = undefined;
+
+    authors.forEach((author) => {
+        if (maxAuthor === undefined) {
+            maxAuthor = author;
+        } else if (author.likes > maxAuthor.likes) {
+            maxAuthor = author;
+        }
+    });
+
+    return maxAuthor;
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 };
