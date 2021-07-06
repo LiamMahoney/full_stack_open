@@ -26,7 +26,7 @@ test('all blogs are returned as json', async () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length);
 });
 
-test ('blog id properly formatted', async () => {
+test('blog id properly formatted', async () => {
     const response = await api
         .get('/api/blogs')
         .expect(200)
@@ -37,7 +37,7 @@ test ('blog id properly formatted', async () => {
     );
 });
 
-test ('a valid blog can be added', async () => {
+test('a valid blog can be added', async () => {
     const newBlog = {
         title: "The Anatomy of a Bull Pizzle",
         author: "Grover Mahoney",
@@ -55,7 +55,23 @@ test ('a valid blog can be added', async () => {
 
     const contents = blogsAtEnd.map(blog => blog.title);
     expect(contents).toContain('The Anatomy of a Bull Pizzle');
-})
+});
+
+test('a note without any likes has default set correctly', async () => {
+    const newBlog = {
+        title: "This is a blog post with no likes",
+        author: "Liam Mahoney",
+        url: "https://liammahoney.dev"
+    }
+
+    const response = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    expect(response.body.likes).toEqual(0);
+});
 
 afterAll(() => {
     mongoose.connection.close();
