@@ -35,6 +35,26 @@ test ('blog id properly formatted', async () => {
     response.body.forEach(
         blog => expect(blog.id).toBeDefined()
     );
+});
+
+test ('a valid blog can be added', async () => {
+    const newBlog = {
+        title: "The Anatomy of a Bull Pizzle",
+        author: "Grover Mahoney",
+        url: "http://www.grovermahoney.com/anatomy-of-a-bull-pizzle.html",
+        likes: 0,
+    };
+
+    await api.post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+    const contents = blogsAtEnd.map(blog => blog.title);
+    expect(contents).toContain('The Anatomy of a Bull Pizzle');
 })
 
 afterAll(() => {
