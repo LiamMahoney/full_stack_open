@@ -1,5 +1,6 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
+const mongoose = require('mongoose');
 
 blogRouter.get('/', async (request, response, next) => {
     try {
@@ -17,6 +18,11 @@ blogRouter.post('/', async (request, response, next) => {
         const savedBlog = await blog.save();
         response.status(201).json(savedBlog);
     } catch (error) {
+        if (error instanceof mongoose.Error.ValidationError) {
+            response.status(400).json({
+                error: error.message
+            })
+        }
         next(error);
     }
 });

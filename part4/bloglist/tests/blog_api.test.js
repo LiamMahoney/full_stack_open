@@ -57,7 +57,7 @@ test('a valid blog can be added', async () => {
     expect(contents).toContain('The Anatomy of a Bull Pizzle');
 });
 
-test('a note without any likes has default set correctly', async () => {
+test('a blog without any likes has default set correctly', async () => {
     const newBlog = {
         title: "This is a blog post with no likes",
         author: "Liam Mahoney",
@@ -71,6 +71,32 @@ test('a note without any likes has default set correctly', async () => {
         .expect('Content-Type', /application\/json/);
 
     expect(response.body.likes).toEqual(0);
+});
+
+test('a new blog without a title causes error', async () => {
+    const newBlog = {
+        author: "Liam Mahoney",
+        url: "https://google.com",
+        likes: 0
+    };
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400);
+});
+
+test ('a new blog without a url causes error', async () => {
+    const newBlog = {
+        title: "lol",
+        author: "Liam Mahoney",
+        likes: 0
+    };
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400);
 });
 
 afterAll(() => {
