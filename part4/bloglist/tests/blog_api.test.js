@@ -99,6 +99,33 @@ test ('a new blog without a url causes error', async () => {
         .expect(400);
 });
 
+describe('delete blogs', () => {
+    test('delete a blog that exists', async () => {
+        const blogs = await helper.blogsInDb();
+        const validId = blogs[0].id;
+
+        await api
+            .delete(`/api/blogs/${validId}`)
+            .expect(204);
+    });
+
+    test('delete a blog witha a valid nonexistent id', async () => {
+        const validNonexistingId = await helper.nonExistingId();
+
+        await api
+            .delete(`/api/blogs/${validNonexistingId}`)
+            .expect(404);
+    });
+
+    test('delete a blog with an invalid id', async () => {
+        const nonExistentId = '3242';
+
+        await api
+            .delete(`/api/blogs/${nonExistentId}`)
+            .expect(500);
+    });
+});
+
 afterAll(() => {
     mongoose.connection.close();
 })
