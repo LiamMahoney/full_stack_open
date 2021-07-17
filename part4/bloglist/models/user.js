@@ -7,13 +7,7 @@ const userSchema = new mongoose.Schema({
         unique: true
     },
     name: String,
-    passwordhash: String,
-    notes: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Note'
-        }
-    ]
+    passwordHash: String
 });
 
 userSchema.set('toJSON', {
@@ -21,12 +15,10 @@ userSchema.set('toJSON', {
         returnedObject.id = returnedObject._id.toString();
         delete returnedObject._id;
         delete returnedObject.__v;
-        delete returnedObject.passwordhash;
+        delete returnedObject.passwordHash;
     }
 });
 
 userSchema.plugin(uniqueValidator);
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;
+module.exports = mongoose.model('User', userSchema);
