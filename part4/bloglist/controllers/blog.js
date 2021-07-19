@@ -2,6 +2,17 @@ const blogRouter = require('express').Router();
 const Blog = require('../models/blog');
 const User = require('../models/user');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+
+const getTokenFrom = request => {
+    const authorization = request.get('authorization');
+
+    if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+        return authorization.substring(7);
+    }
+
+    return null;
+}
 
 blogRouter.get('/', async (request, response, next) => {
     try {
@@ -15,12 +26,21 @@ blogRouter.get('/', async (request, response, next) => {
 });
 
 blogRouter.post('/', async (request, response, next) => {
-    const blog = new Blog(request.body);
-
-    const user = await User.findOne({});
-    blog.user = user._id;
-
     try {
+        const blog = new Blog(request.body);
+
+        const token = getTokenFrom(request);
+        const decodedToken = jwt.verify(token, process.env.SECRET);
+
+        if (!token || !decodedToken.id) {
+            return response.status(401).json({
+                error: 'token missing or invalid'
+            });
+        }
+
+        const user = await User.findById(decodedToken.id);
+        blog.user = user._id
+
         const savedBlog = await blog.save();
         
         user.blogs = user.blogs.concat(savedBlog._id);
@@ -32,6 +52,8 @@ blogRouter.post('/', async (request, response, next) => {
             response.status(400).json({
                 error: error.message
             })
+        } else if (error.name === 'JsonWebTokenError') {
+            return response.status(401).json({ error: 'invalid token' });
         }
         next(error);
     }
