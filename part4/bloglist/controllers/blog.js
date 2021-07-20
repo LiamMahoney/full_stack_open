@@ -44,7 +44,8 @@ blogRouter.post('/', middleWare.userExtractor, async (request, response, next) =
 blogRouter.delete('/:id', middleWare.userExtractor, async (request, response, next) => {
     try {
         const blog = await Blog.findById(request.params.id);
-
+        console.log('blog', blog);
+        console.log('request.token', request.token);
         if (blog) {
             if (request.token && blog.user.toString() === request.user.id.toString()) {
                 

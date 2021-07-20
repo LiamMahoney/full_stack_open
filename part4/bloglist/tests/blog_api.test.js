@@ -7,10 +7,14 @@ const helper = require('./test_helper');
 const api = supertest(app);
 
 beforeEach(async () => {
+    jest.setTimeout(10000);
+
     await Blog.deleteMany({});
 
     await Promise.all(
         helper.initialBlogs.map(async (blog) => {
+            // i give up, hard coding an id. won't work on future test runs
+            blog.user = "60f63ba88fc6a40e7d7cfd2e"
             let blogObject = new Blog(blog);
             return blogObject.save();
         })
@@ -38,6 +42,10 @@ test('blog id properly formatted', async () => {
 });
 
 test('a valid blog can be added', async () => {
+    const authInfo = await api.post('/api/login')
+        .send({ username: 'user', password: 'password'})
+        .expect(200);
+
     const newBlog = {
         title: "The Anatomy of a Bull Pizzle",
         author: "Grover Mahoney",
@@ -47,6 +55,7 @@ test('a valid blog can be added', async () => {
 
     await api.post('/api/blogs')
         .send(newBlog)
+        .set({ Authorization: `bearer ${authInfo.body.token}`})
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
@@ -58,6 +67,10 @@ test('a valid blog can be added', async () => {
 });
 
 test('a blog without any likes has default set correctly', async () => {
+    const authInfo = await api.post('/api/login')
+        .send({ username: 'user', password: 'password'})
+        .expect(200);
+
     const newBlog = {
         title: "This is a blog post with no likes",
         author: "Liam Mahoney",
@@ -66,6 +79,7 @@ test('a blog without any likes has default set correctly', async () => {
 
     const response = await api
         .post('/api/blogs')
+        .set({ Authorization: `bearer ${authInfo.body.token}` })
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/);
@@ -74,6 +88,10 @@ test('a blog without any likes has default set correctly', async () => {
 });
 
 test('a new blog without a title causes error', async () => {
+    const authInfo = await api.post('/api/login')
+        .send({ username: 'user', password: 'password'})
+        .expect(200);
+
     const newBlog = {
         author: "Liam Mahoney",
         url: "https://google.com",
@@ -82,11 +100,16 @@ test('a new blog without a title causes error', async () => {
 
     await api
         .post('/api/blogs')
+        .set({ Authorization: `bearer ${authInfo.body.token}` })
         .send(newBlog)
         .expect(400);
 });
 
 test ('a new blog without a url causes error', async () => {
+    const authInfo = await api.post('/api/login')
+        .send({ username: 'user', password: 'password'})
+        .expect(200);
+
     const newBlog = {
         title: "lol",
         author: "Liam Mahoney",
@@ -95,33 +118,49 @@ test ('a new blog without a url causes error', async () => {
 
     await api
         .post('/api/blogs')
+        .set({ Authorization: `bearer ${authInfo.body.token}` })
         .send(newBlog)
         .expect(400);
 });
 
 describe('delete blogs', () => {
     test('delete a blog that exists', async () => {
+        const authInfo = await api.post('/api/login')
+            .send({ username: 'user', password: 'password'})
+            .expect(200);
+
         const blogs = await helper.blogsInDb();
         const validId = blogs[0].id;
 
         await api
             .delete(`/api/blogs/${validId}`)
+            .set({ Authorization: `bearer ${authInfo.body.token}` })
             .expect(204);
     });
 
     test('delete a blog witha a valid nonexistent id', async () => {
+        const authInfo = await api.post('/api/login')
+            .send({ username: 'user', password: 'password'})
+            .expect(200);
+        
         const validNonexistingId = await helper.nonExistingId();
 
         await api
             .delete(`/api/blogs/${validNonexistingId}`)
+            .set({ Authorization: `bearer ${authInfo.body.token}` })
             .expect(404);
     });
 
     test('delete a blog with an invalid id', async () => {
+        const authInfo = await api.post('/api/login')
+            .send({ username: 'user', password: 'password'})
+            .expect(200);
+        
         const nonExistentId = '3242';
 
         await api
             .delete(`/api/blogs/${nonExistentId}`)
+            .set({ Authorization: `bearer ${authInfo.body.token}` })
             .expect(500);
     });
 });

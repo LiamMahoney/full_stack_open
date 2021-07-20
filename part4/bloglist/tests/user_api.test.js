@@ -9,6 +9,7 @@ const api = supertest(app);
 
 describe('invalid user submitted', () => {
     beforeEach(async() => {
+        jest.setTimeout(10000);
         await User.deleteMany({});
 
         const passwordHash = await bcrypt.hash('password', 10);
