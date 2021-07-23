@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -11,6 +12,7 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -39,7 +41,13 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch(error) {
-      console.error(error);
+      setNotification({
+        message: 'wrong username or password', 
+        type: 'error'
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
     }
   }
 
@@ -56,10 +64,12 @@ const App = () => {
         user ?
           <div>
             <p>{user.name} logged in</p>
+            <Notification notification={notification}/>
             <button onClick={logoutHandler}>log out</button>
             <BlogForm
               setBlogs={setBlogs}
               blogs={blogs}
+              setNotification={setNotification}
             />
             <h2>blogs</h2>
             {blogs.map(blog =>
@@ -67,13 +77,17 @@ const App = () => {
             )}
           </div>
            :
-        <LoginForm 
-          loginHandler={loginHandler} 
-          setUsername={setUsername} 
-          setPassword={setPassword}
-          username={username}
-          password={password}
-        />
+           <div>
+            <h2>log into application</h2>
+            <Notification notification={notification}/>
+            <LoginForm
+                loginHandler={loginHandler} 
+                setUsername={setUsername} 
+                setPassword={setPassword}
+                username={username}
+                password={password}
+              />
+           </div>
       }
     </div>
   )

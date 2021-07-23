@@ -8,21 +8,37 @@ const BlogForm = (props) => {
     const [url, setUrl] = useState('');
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
+        try {
+            event.preventDefault();
 
-        const blog = {
-            title,
-            author,
-            url
+            const blog = {
+                title,
+                author,
+                url
+            }
+    
+            const response = await blogService.create(blog);
+            
+            props.setBlogs(props.blogs.concat(response));
+            props.setNotification({
+                message: `a new blog ${title} by ${author} was added`,
+                type: 'success'
+            });
+
+            setTitle('');
+            setAuthor('');
+            setUrl('');
+        } catch (error) {
+            props.setNotification({
+                message: 'experienced an error. Please try again',
+                type: 'error'
+            })
+        } finally {
+            setTimeout(() => {
+                props.setNotification('')
+            }, 5000);
         }
-
-        const response = await blogService.create(blog);
-        console.log('response', response);
-        props.setBlogs(props.blogs.concat(response));
-
-        setTitle('');
-        setAuthor('');
-        setUrl('');
+ 
     }
 
     return (
