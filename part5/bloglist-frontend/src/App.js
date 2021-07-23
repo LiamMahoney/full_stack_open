@@ -15,12 +15,24 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [])
+  }, []);
 
-  const submitHandler = async (event) => {
+  useEffect(() => {
+    if (window.localStorage.getItem('user')) {
+      const user = JSON.parse(window.localStorage.getItem('user'));
+      setUser(user);
+    }
+  }, []);
+
+  const loginHandler = async (event) => {
     event.preventDefault();
     try {
       const user = await loginService.login({ username, password });
+
+      window.localStorage.setItem(
+        'user', JSON.stringify(user)
+      );
+
       setUser(user);
       setUsername('');
       setPassword('');
@@ -29,19 +41,27 @@ const App = () => {
     }
   }
 
+  const logoutHandler = async (event) => {
+    event.preventDefault();
+
+    window.localStorage.removeItem('user')
+    setUser(null);
+  }
+
   return (
     <div>
       {
         user ?
           <div>
             <p>{user.name} logged in</p>
+            <button onClick={logoutHandler}>log out</button>
             <h2>blogs</h2>
             {blogs.map(blog =>
               <Blog key={blog.id} blog={blog} />
             )}
           </div> :
         <LoginForm 
-          submitHandler={submitHandler} 
+          loginHandler={loginHandler} 
           setUsername={setUsername} 
           setPassword={setPassword}
           username={username}

@@ -4,7 +4,7 @@ const LoginForm = (props) => {
 
     return (
         <div>
-            <form onSubmit={props.submitHandler}>
+            <form onSubmit={props.loginHandler}>
                 <div>
                     Username
                     <input
