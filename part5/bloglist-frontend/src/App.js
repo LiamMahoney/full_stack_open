@@ -32,7 +32,7 @@ const App = () => {
     event.preventDefault();
     try {
       const user = await loginService.login({ username, password });
-
+      
       window.localStorage.setItem(
         'user', JSON.stringify(user)
       );
@@ -85,7 +85,6 @@ const App = () => {
   const updateBlog = async (blogObject) => {
     try {
       const updatedBlog = await blogService.update(blogObject);
-      console.log(updatedBlog);
 
       let otherBlogs = blogs.filter((b) => {
         return b.id !== blogObject.id
@@ -103,6 +102,23 @@ const App = () => {
         setNotification(null);
       }, 5000);
     }
+  }
+
+  const removeBlog = async (blog) => {
+      if (window.confirm(`Remove blog ${blog.name} by ${blog.author}?`)){
+        try {
+          await blogService.remove(blog.id);
+          setBlogs(blogs.filter((b) => b.id !== blog.id));
+        } catch (error) {
+          setNotification({
+            message: 'experienced an error deleting the blog',
+            type: 'error'
+          });
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        }
+      }
   }
 
   return (
@@ -123,7 +139,12 @@ const App = () => {
             {blogs.sort((a, b) => {
               return b.likes - a.likes;
             }).map(blog =>
-              <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+              <Blog 
+                key={blog.id} 
+                blog={blog} 
+                updateBlog={updateBlog}
+                removeBlog={removeBlog}
+                />
             )}
           </div>
            :

@@ -24,10 +24,12 @@ blogRouter.post('/', middleWare.userExtractor, async (request, response, next) =
         blog.user = user._id;
 
         const savedBlog = await blog.save();
-        
+
+        savedBlog.populate("user", {name: 1, username: 1}).execPopulate()
+
         user.blogs = user.blogs.concat(savedBlog._id);
         await user.save();
-
+        
         response.status(201).json(savedBlog);
     } catch (error) {
         if (error instanceof mongoose.Error.ValidationError) {
@@ -44,8 +46,6 @@ blogRouter.post('/', middleWare.userExtractor, async (request, response, next) =
 blogRouter.delete('/:id', middleWare.userExtractor, async (request, response, next) => {
     try {
         const blog = await Blog.findById(request.params.id);
-        console.log('blog', blog);
-        console.log('request.token', request.token);
         if (blog) {
             if (request.token && blog.user.toString() === request.user.id.toString()) {
                 
