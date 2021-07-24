@@ -82,6 +82,29 @@ const App = () => {
     }
   }
 
+  const updateBlog = async (blogObject) => {
+    try {
+      const updatedBlog = await blogService.update(blogObject);
+      console.log(updatedBlog);
+
+      let otherBlogs = blogs.filter((b) => {
+        return b.id !== blogObject.id
+      });
+      console.log('otherBlogs', otherBlogs);
+      console.log('updatedBlog', updatedBlog);
+      setBlogs([...otherBlogs, updatedBlog])
+
+    } catch (error) {
+      setNotification({
+        message: 'experienced an error creating the blog',
+        type: 'error'
+      });
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
+  }
+
   return (
     <div>
       {
@@ -98,7 +121,7 @@ const App = () => {
             </Togglable>
             <h2>blogs</h2>
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />
+              <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
             )}
           </div>
            :

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({blog}) => {
+const Blog = ({blog, updateBlog}) => {
   const [viewDetails, setViewDetails] = useState(false);
 
   const detialStyle = {
@@ -12,6 +12,14 @@ const Blog = ({blog}) => {
   const buttonText = viewDetails ? 'hide' : 'view'
   const detailsHiddenStyle = { display: viewDetails ? '' : 'none' }
   
+  const addLike = (event) => {
+    event.preventDefault();
+    let updatedBlog = blog
+    updatedBlog.likes++;
+
+    updateBlog(updatedBlog);
+  }
+
   return (
     <div style={detialStyle}>
       {blog.title} {blog.author} 
@@ -19,7 +27,7 @@ const Blog = ({blog}) => {
       <div style={detailsHiddenStyle}>
         <p>{blog.url}</p>
         <div>
-          likes {blog.likes} <button>like</button>
+          likes {blog.likes} <button onClick={addLike}>like</button>
         </div>
         <p>{blog.user && 'name' in blog.user ? blog.user.name : 'unknown'}</p>
       </div>
