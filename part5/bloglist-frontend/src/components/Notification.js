@@ -2,7 +2,7 @@ import React from 'react';
 
 const Notification = (props) => {
 
-    const notificationStyle = props.notification && props.notification.type === 'error' ? 
+    const notificationStyle = props.notification && props.notification.type === 'error' ?
     {
         color: 'red',
         background: 'lightgrey',

@@ -54,7 +54,7 @@ const BlogForm = (props) => {
                 <button onSubmit={handleSubmit}>create</button>
             </form>
         </div>
-    
+
     );
 }
 

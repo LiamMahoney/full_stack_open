@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef} from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -18,7 +18,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, []);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const App = () => {
     event.preventDefault();
     try {
       const user = await loginService.login({ username, password });
-      
+
       window.localStorage.setItem(
         'user', JSON.stringify(user)
       );
@@ -43,7 +43,7 @@ const App = () => {
       setPassword('');
     } catch(error) {
       setNotification({
-        message: 'wrong username or password', 
+        message: 'wrong username or password',
         type: 'error'
       });
       setTimeout(() => {
@@ -139,9 +139,9 @@ const App = () => {
             {blogs.sort((a, b) => {
               return b.likes - a.likes;
             }).map(blog =>
-              <Blog 
-                key={blog.id} 
-                blog={blog} 
+              <Blog
+                key={blog.id}
+                blog={blog}
                 updateBlog={updateBlog}
                 removeBlog={removeBlog}
                 />
@@ -152,8 +152,8 @@ const App = () => {
             <h2>log into application</h2>
             <Notification notification={notification}/>
             <LoginForm
-                loginHandler={loginHandler} 
-                setUsername={setUsername} 
+                loginHandler={loginHandler}
+                setUsername={setUsername}
                 setPassword={setPassword}
                 username={username}
                 password={password}

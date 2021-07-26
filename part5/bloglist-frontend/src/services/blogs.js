@@ -29,7 +29,7 @@ const update = async (updatedBlog) => {
       Authorization: token
     }
   }
-  
+
   const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog, config);
 
   return response.data;
