@@ -38,6 +38,7 @@ const Blog = ({blog, updateBlog, removeBlog}) => {
         </div>
         <p>{blog.user && 'name' in blog.user ? blog.user.name : 'unknown'}</p>
         {
+          //TODO: check how they do this, thsi implementation can't be ideal
           blog.user && currUser && blog.user.username === currUser.username ? 
             <button onClick={remove}>delete</button> :
             null
